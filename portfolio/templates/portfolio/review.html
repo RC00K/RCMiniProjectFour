@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<title>{%  block title %}Review{% endblock %} - Ryder Cook</title>
+<!--====== REVIEW ======-->
+<section class="about pt-100 pb-50" id="review">
+    <div class="container py=4">
+        <h2 class="section__title">Reviews</h2>
+        <span class="section__subtitle">Client Reviews</span>
+    </div>
+</section>
+<main class="container">
+  <div class="row">
+      <div class="col text-center">
+        {% if user.is_authenticated %}
+          <a type="submit" value="New Post" class="btn btn-primary btn-lg" style="width: 200px; margin: auto;" href="{% url 'portfolio:create' %}">New Post</a>
+        {% endif %}
+      </div>
+  </div>
+  <div class="my-3 p-3 bg-body rounded shadow-sm">
+    {% for post in review %}
+    <div class="col-md-12">
+      <h5>{{ post.title }}</h5>
+      <p>{{ post.text }}</p>
+    </div>
+    <p class="text-dark" style="color: #22262a;">@{{ post.username }} - {{ post.create }}</p>
+        {% if user.id == post.author_id %}
+          <a class="action label label-default px-2 text-secondary" href="{% url 'portfolio:post_create' pk=post.pk %}" style="text-decoration: none;">Edit</a>
+        {% endif %}
+        {% if not loop.last %}
+        <hr>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% if user.is_authenticated %}
+  {% for poll in polls %}
+  <div class="card" style="margin: 1em auto;">
+      <div class="card-body">
+          <h5 class="card-title">{{ poll.name }}</h5>
+          <p class="card-text">{{ poll.description }}</p>
+          <a href="{% url 'portfolio:detail' poll.id %}" class="btn btn-primary">Vote</a>
+      </div>
+  </div>
+  {% endfor %}
+{% endif %}
+</main>
+{% endblock %}

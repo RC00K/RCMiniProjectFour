@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<title>{%  block title %}Contact{% endblock %} - Ryder Cook</title>
+<!--===== CONTACT =====-->
+<section class="contact pt-100 pb-50" id="contact">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6 mx-auto text-center">
+                <div class="section-title mb-100">
+                    <h2 class="section__title">Contact Me</h2>
+                    <span class="section__subtitle">Let's Get In Touch</span>
+                </div>
+            </div>
+        </div>
+        <form class="form-section" style="max-width: 830px;" id="contactForm">
+            <!--===== NAME =====-->
+            <div class="mb-3">
+                <input class="form-control" id="name" type="text" placeholder="Name" data-sb-validations="required">
+            </div>
+            <!--===== EMAIL =====-->
+            <div class="mb-3">
+                <input class="form-control" id="emailAddress" type="email" placeholder="Email" data-sb-validations="required">
+            </div>
+            <!--===== MESSAGE =====-->
+            <div class="mb-3">
+                <textarea class="form-control" id="message" type="text" placeholder="Your message here...." style="height: 10rem; resize: none;" data-sb-validations="required"></textarea>
+            </div>
+            <!--===== SUBMIT =====-->
+            <div class="d-grid">
+                <button type="button" class="btn btn-primary btn-lg" style="width: 200px; margin: auto;">Submit</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

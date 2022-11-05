@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+{% load crispy_forms_tags %}
+<title>{%  block title %}{% endblock %} - Portfolio</title>
+{% load static %}
+<link rel="stylesheet" href="{% static 'portfolio/style.css' %}">
+<link rel="stylesheet" href="{% static 'portfolio/css/bootstrap.css' %}">
+<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,800,900%7cRaleway:300,400,500,600,700" rel="stylesheet">
+<body class="d-flex flex-column h-100">
+    <main class="flex-shrink-0">
+        <!--===== HEADER =====-->
+        <header class="p-3 bg-dark text-white">
+            <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                        <li><a href="{% url 'portfolio:review' %}" class="nav-link px-2 text-secondary">Review</a></li>
+                        <li><a href="{% url 'portfolio:home' %}" class="nav-link px-2 text-secondary">Home</a></li>
+                        <li><a href="{% url 'portfolio:about' %}" class="nav-link px-2 text-secondary">About</a></li>
+                        <li><a href="{% url 'portfolio:skills' %}" class="nav-link px-2 text-secondary">Skills</a></li>
+                        <li><a href="{% url 'portfolio:services' %}" class="nav-link px-2 text-secondary">Services</a></li>
+                        <li><a href="{% url 'portfolio:contact' %}" class="nav-link px-2 text-secondary">Contact</a></li>
+                    </ul>
+                    <div class="text-end">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'portfolio:logout' %}"><button type="button" class="btn btn-outline-light me-2">Log Out</button></a>
+                        <a><button type="button" class="btn btn-warning">{{ user.username }}</button></a>
+                        {% else %}
+                        <a href="{% url 'portfolio:login' %}"><button type="button" class="btn btn-outline-light me-2">Log In</button></a>
+                        <a href="{% url 'portfolio:register' %}"><button type="button" class="btn btn-warning">Register</button></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </header>
+    </main>
+</body>
+<section class="content">
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+    {% for message in get_flashed_messages %}
+        <div class="flash">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+</section>
+<!--====== MAIN JS ======-->
+<script type="text/javascript" src="{% static 'portfolio/main.js' %}"></script>
