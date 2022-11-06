@@ -17,15 +17,15 @@
           {% csrf_token %}
           <!--===== TITLE =====-->
           <div class="mb-3">
-              <input name="title" value="{{ request.form.title }}" class="form-control" id="title" type="text" placeholder="Title" required>
+              <input name="title" value="{{ request.review.title }}" class="form-control" id="title" type="text" placeholder="Title" required>
           </div>
           <!--===== MESSAGE =====-->
           <div class="mb-3">
-              <textarea name="body" class="form-control" id="body" type="text" placeholder="Your message here...." style="height: 10rem; resize: none;" required>{{ request.form.body }}</textarea>
+              <textarea name="body" class="form-control" id="body" type="text" placeholder="Your message here...." style="height: 10rem; resize: none;" required>{{ request.review.body }}</textarea>
           </div>
           <!--===== SUBMIT =====-->
           <div class="d-grid">
-              <input type="submit" value="Submit" class="btn btn-primary btn-lg" style="width: 200px; margin: auto;">
+              <input type="submit" value="Submit" class="btn btn-primary btn-lg" href="{% url 'portfolio:review' %}" style="width: 200px; margin: auto;">
           </div>
         </form>
     </div>

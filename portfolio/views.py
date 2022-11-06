@@ -4,9 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic, View
 from django.utils import timezone
-from .models import Choice, Poll, Vote
+from .models import Choice, Poll, Vote, Review
 # Form Imports
-from .forms import NewUserForm
+from .forms import NewUserForm, ReviewForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
@@ -89,16 +89,6 @@ def logout_request(request):
     return redirect("portfolio:review")
 
 
-#class DetailView(generic.DetailView):
-#    model = Question
-#    template_name = 'portfolio/detail.html'
-
-
-#class ResultsView(generic.DetailView):
-#    model = Question
-#    template_name = 'portfolio/results.html'
-
-
 def HomeView(request):
     return render(request, "portfolio/home.html")
 
@@ -119,11 +109,24 @@ def ContactView(request):
     return render(request, "portfolio/contact.html")
 
 
-def UpdateView(request):
-    return render(request, "portfolio/update.html")
-
-
 def CreateView(request):
-    return render(request, "portfolio/create.html")
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user
+            post.save()
+    form = ReviewForm()
+    return render(request, "portfolio/create.html", {"form": form})
 
+
+def UpdateView(request):
+    context = {}
+    object = context.get(ReviewForm)
+    form = ReviewForm(request.POST or None, instance=object)
+    if form.is_valid():
+        form.update()
+        return HttpResponseRedirect("/")
+    context["form"] = form
+    return render(request, "portfolio/update.html", context)
 

@@ -1,8 +1,9 @@
 from django.contrib import admin
-from portfolio.models import Choice, Poll, Vote
+from portfolio.models import Choice, Poll, Vote, Review
 
 # Polls On Admin Side
 admin.site.register(Choice)
 admin.site.register(Poll)
 admin.site.register(Vote)
+admin.site.register(Review)
 

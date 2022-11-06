@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 app_name = 'portfolio'
@@ -6,6 +6,7 @@ urlpatterns = [
     # Reviews and Post Creation
     path('', views.ReviewView.as_view(), name='review'),
     path('create/', views.CreateView, name='create'),
+    path('update/', views.UpdateView, name='update'),
     # Other Pages
     path('home/', views.HomeView, name='home'),
     path('about/', views.AboutView, name='about'),

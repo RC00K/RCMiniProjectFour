@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -32,3 +33,17 @@ class Vote(models.Model):
 
     def __str__(self):
         return f"{self.poll.name} - {self.choice.name}"
+
+
+class Review(models.Model):
+    user = models.ForeignKey(User, related_name="reviews", on_delete=models.DO_NOTHING)
+
+    title = models.CharField(max_length=50)
+    body = models.CharField(max_length=150)
+
+    def __str__(self):
+        return (
+            f"{self.user} "
+            f"{self.title[:30]}..."
+            f"{self.body[:30]}..."
+        )

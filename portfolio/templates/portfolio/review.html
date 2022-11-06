@@ -17,14 +17,14 @@
       </div>
   </div>
   <div class="my-3 p-3 bg-body rounded shadow-sm">
-    {% for post in review %}
+    {% for review in user.reviews.all %}
     <div class="col-md-12">
-      <h5>{{ post.title }}</h5>
-      <p>{{ post.text }}</p>
+      <h5>{{ review.title }}</h5>
+      <p>{{ review.body }}</p>
     </div>
-    <p class="text-dark" style="color: #22262a;">@{{ post.username }} - {{ post.create }}</p>
-        {% if user.id == post.author_id %}
-          <a class="action label label-default px-2 text-secondary" href="{% url 'portfolio:post_create' pk=post.pk %}" style="text-decoration: none;">Edit</a>
+    <p class="text-dark" style="color: #22262a;">@{{ review.user }}</p>
+        {% if user == review.user %}
+          <a class="action label label-default px-2 text-secondary" href="{% url 'portfolio:update' %}" style="text-decoration: none;">Edit</a>
         {% endif %}
         {% if not loop.last %}
         <hr>

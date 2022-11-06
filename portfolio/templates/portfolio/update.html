@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+{% block content %}
 <title>{%  block title %}Update{% endblock %} - Ryder Cook</title>
 <section class="update pt-100 pb-50" id="update">
     <div class="row">
@@ -8,38 +10,29 @@
             </div>
         </div>
     </div>
+    {% for review in user.reviews.all %}
     <div class="container">
+        {% if user == review.user %}
         <form method="post" class="form-section" style="max-width: 830px;" id="contactForm">
           {% csrf_token %}
           <!--===== TITLE =====-->
           <div class="mb-3">
-              <input name="title" value="{{ request.form.title }} or {{ post.title }}" class="form-control" id="title" type="text" placeholder="Name" required>
+              <input name="title" value="{{ request.review.title }}{{ review.title }}" class="form-control" id="title" type="text" placeholder="Name" required>
           </div>
           <!--===== MESSAGE =====-->
           <div class="mb-3">
-              <textarea name="body" class="form-control" id="body" type="text" placeholder="Your message here...." style="height: 10rem; resize: none;" required>{{ request.form.body }} or {{ post.body }}</textarea>
+              <textarea name="body" class="form-control" id="body" type="text" placeholder="Your message here...." style="height: 10rem; resize: none;" required>{{ request.review.body }}{{ review.body }}</textarea>
           </div>
           <!--===== SUBMIT =====-->
           <div class="row">
               <div class="col text-center">
-                  <input type="submit" value="Submit" class="btn btn-primary btn-lg" style="width: 200px; margin: auto;">
-                  <button type="button" class="btn btn-primary btn-lg" style="width: 200px; margin: auto;" onclick="toggleModal()">Delete</button>
-                  <div class="modal-background" onclick="toggleModal()"></div>
-                  <div class="modal">
-                      <!--===== MODAL =====-->
-
-                  </div>
-                  <script type="text/javascript">
-                      const toggleModal = () => {
-                          const { classList } = document.body
-                      }
-                  </script>
+                  <input type="submit" value="Submit" class="btn btn-primary btn-lg" href="{% url 'portfolio:review' %}" style="width: 200px; margin: auto;">
+                  <button type="button" class="btn btn-primary btn-lg" style="width: 200px; margin: auto;">Delete</button>
               </div>
           </div>
         </form>
-        <form action="delete.html" method="post">
-            {% csrf_token %}
-            <input type="submit" value="Delete" class="btn btn-primary btn-lg" style="width: 200px; margin: auto;">
-        </form>
+        {% endif %}
     </div>
+    {% endfor %}
 </section>
+{% endblock %}
