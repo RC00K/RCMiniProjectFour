@@ -36,10 +36,11 @@ class Vote(models.Model):
 
 
 class Review(models.Model):
-    user = models.ForeignKey(User, related_name="reviews", on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, related_name="reviews", on_delete=models.CASCADE)
 
     title = models.CharField(max_length=50)
     body = models.CharField(max_length=150)
+    date_posted = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return (

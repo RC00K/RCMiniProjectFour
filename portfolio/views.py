@@ -109,24 +109,35 @@ def ContactView(request):
     return render(request, "portfolio/contact.html")
 
 
+def create_review(request):
+    review_obj = request.POST['body']
+    print(f'this is a {review_obj}')
+    if review_obj != '':
+        title = ''
+        body = review_obj
+        Review(title=title, body=body, user=request.user).save()
+    return render(request, "portfolio/create.html")
+
+
 def CreateView(request):
     if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():
-            post = form.save(commit=False)
-            post.user = request.user
-            post.save()
-    form = ReviewForm()
+            review = form.save(commit=False)
+            review.user = request.user
+            review.save()
+    form = Review()
     return render(request, "portfolio/create.html", {"form": form})
 
 
-def UpdateView(request):
-    context = {}
-    object = context.get(ReviewForm)
-    form = ReviewForm(request.POST or None, instance=object)
-    if form.is_valid():
-        form.update()
-        return HttpResponseRedirect("/")
-    context["form"] = form
-    return render(request, "portfolio/update.html", context)
+def delete_review(request, review_id):
+    review = Review.objects.get(pk=review_id)
+    review.delete()
+    return redirect('review')
+
+
+def edit_review(request, review_id):
+    review = Review.objects.get(pk=review_id)
+    review.save()
+    return render(request, "portfolio/update.html")
 

@@ -1,12 +1,14 @@
 from django.urls import path, re_path
 from . import views
+from portfolio.views import create_review, delete_review, edit_review
 
 app_name = 'portfolio'
 urlpatterns = [
     # Reviews and Post Creation
     path('', views.ReviewView.as_view(), name='review'),
     path('create/', views.CreateView, name='create'),
-    path('update/', views.UpdateView, name='update'),
+    path('delete/<int:review_id>/', delete_review, name='delete'),
+    path('update/<int:review_id>/', edit_review, name='update'),
     # Other Pages
     path('home/', views.HomeView, name='home'),
     path('about/', views.AboutView, name='about'),

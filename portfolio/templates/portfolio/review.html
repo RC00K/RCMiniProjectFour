@@ -16,21 +16,34 @@
         {% endif %}
       </div>
   </div>
+  {% for review in user.reviews.all %}
   <div class="my-3 p-3 bg-body rounded shadow-sm">
-    {% for review in user.reviews.all %}
     <div class="col-md-12">
       <h5>{{ review.title }}</h5>
       <p>{{ review.body }}</p>
     </div>
     <p class="text-dark" style="color: #22262a;">@{{ review.user }}</p>
         {% if user == review.user %}
-          <a class="action label label-default px-2 text-secondary" href="{% url 'portfolio:update' %}" style="text-decoration: none;">Edit</a>
+            <div class="row">
+                <div class="col-sm-1">
+                    <form action="/edit/{{ review.id }}/" method="post">
+                        {% csrf_token %}
+                        <a class="action label label-default px-2 text-secondary" href="{% url 'portfolio:update' review.id %}" style="text-decoration: none;">Edit</a>
+                    </form>
+                </div>
+                <div class="col-sm-1">
+                    <form action="/delete/{{ review.id }}/">
+                        {% csrf_token %}
+                        <a class="action label label-default px-2 text-secondary" style="text-decoration: none;">Delete</a>
+                    </form>
+                </div>
+            </div>
         {% endif %}
         {% if not loop.last %}
         <hr>
       {% endif %}
-    {% endfor %}
   </div>
+  {% endfor %}
   {% if user.is_authenticated %}
   {% for poll in polls %}
   <div class="card" style="margin: 1em auto;">

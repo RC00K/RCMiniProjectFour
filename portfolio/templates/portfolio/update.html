@@ -10,7 +10,7 @@
             </div>
         </div>
     </div>
-    {% for review in user.reviews.all %}
+    {% for review in user.review.update %}
     <div class="container">
         {% if user == review.user %}
         <form method="post" class="form-section" style="max-width: 830px;" id="contactForm">
