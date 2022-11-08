@@ -1,15 +1,16 @@
-
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from django.views import generic, View
+from django.views import generic
+from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView)
 from django.utils import timezone
-from .models import Choice, Poll, Vote, Review
+from .models import Choice, Poll, Vote, Post
 # Form Imports
 from .forms import NewUserForm, ReviewForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 
 # Create your views here.
@@ -40,13 +41,16 @@ class PollView(generic.View):
             poll_results = []
         except (KeyError, Choice.DoesNotExist):
             # Redisplay the question rating form
-            return render(request, 'portfolio/detail.html', context={"error_message": "No Choice Selected - Try Again", })
+            return render(request, 'portfolio/detail.html',
+                          context={"error_message": "No Choice Selected - Try Again", })
         else:
             for choice in poll.choices.all():
                 voteCount = Vote.objects.filter(poll=poll, choice=choice).count()
                 poll_results.append([choice.name, voteCount])
 
-            return render(request, template_name='portfolio/detail.html', context={"poll": poll, "success_message": "Voted Successfully", "poll_results": poll_results, })
+            return render(request, template_name='portfolio/detail.html',
+                          context={"poll": poll, "success_message": "Voted Successfully",
+                                   "poll_results": poll_results, })
 
 
 # Registration request
@@ -57,7 +61,7 @@ def register_request(request):
             user = form.save()
             login(request, user)
             messages.success(request, "Registration successful")
-            return redirect("portfolio:review")
+            return redirect("review")
         messages.error(request, "Unsuccessful registration. Invalid information")
     form = NewUserForm()
     return render(request=request, template_name="auth/register.html", context={"register_form": form})
@@ -74,7 +78,7 @@ def login_request(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}.")
-                return redirect("portfolio:review")
+                return redirect("review")
             else:
                 messages.error(request, "Invalid username or password")
         else:
@@ -86,7 +90,7 @@ def login_request(request):
 def logout_request(request):
     logout(request)
     messages.info(request, "You have successfully logged out")
-    return redirect("portfolio:review")
+    return redirect("review")
 
 
 def HomeView(request):
@@ -109,35 +113,46 @@ def ContactView(request):
     return render(request, "portfolio/contact.html")
 
 
-def create_review(request):
-    review_obj = request.POST['body']
-    print(f'this is a {review_obj}')
-    if review_obj != '':
-        title = ''
-        body = review_obj
-        Review(title=title, body=body, user=request.user).save()
-    return render(request, "portfolio/create.html")
+class PostListView(ListView):
+    model = Post
+    template_name = "portfolio/review.html"
+    context_object_name = 'posts'
+    ordering = ['date_posted']
 
 
-def CreateView(request):
-    if request.method == "POST":
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            review = form.save(commit=False)
-            review.user = request.user
-            review.save()
-    form = Review()
-    return render(request, "portfolio/create.html", {"form": form})
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    fields = ["title", "body"]
+    template_name = "portfolio/create.html"
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
-def delete_review(request, review_id):
-    review = Review.objects.get(pk=review_id)
-    review.delete()
-    return redirect('review')
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    fields = ['title', 'body']
+    template_name = "portfolio/update.html"
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
 
 
-def edit_review(request, review_id):
-    review = Review.objects.get(pk=review_id)
-    review.save()
-    return render(request, "portfolio/update.html")
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    template_name = "portfolio/delete.html"
+    success_url = '/'
 
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False

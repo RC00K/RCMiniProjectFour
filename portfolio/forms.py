@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Review
+from .models import Post
 
 
 # Forms go here
@@ -25,7 +25,13 @@ class ReviewForm(forms.ModelForm):
     title = forms.CharField(required=True)
     body = forms.CharField(required=True)
 
+    def save(self, commit=True):
+        review = super(ReviewForm, self).save(commit=False)
+        if commit:
+            review.save()
+        return review
+
     class Meta:
-        model = Review
+        model = Post
         fields = "__all__"
         exclude = ("user", )

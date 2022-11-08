@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<title>{%  block title %}Delete{% endblock %} - Ryder Cook</title>
+<!--====== REVIEW ======-->
+<section class="about pt-100 pb-50" id="review">
+    <div class="container py=4">
+        <h2 class="section__title">Delete Review</h2>
+        <span class="section__subtitle">Your Review</span>
+    </div>
+</section>
+<main class="container">
+    <form method="post" class="form-section" style="max-width: 830px;" id="contactForm">
+        {% csrf_token %}
+        <div class="my-3 p-3 bg-body rounded shadow-sm">
+            <h6 class="text-danger text-center text-uppercase"><b>Do you want to delete your review?</b></h6>
+            <p class="text-secondary" style="color: #22262a;">@{{ post.author }}</p>
+            <div class="col-md-12">
+              <h5>{{ post.title }}</h5>
+              <p>{{ post.body }}</p>
+            </div>
+            <hr>
+            <a class="label label-default px-2 text-secondary" style="color: #22262a; text-decoration: none;">{{ post.date_posted|date:"F d, Y"}}</a>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <input type="submit" value="Delete" class="btn btn-primary btn-lg" style="width: 200px; margin: auto;">
+            </div>
+        </div>
+    </form>
+</main>
+{% endblock %}
