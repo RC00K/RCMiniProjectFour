@@ -18,8 +18,11 @@ Bootstrap V5 Modal
 
 ## _Initialize Database_
 1. Make Migrations
+
    `python3 manage.py makemigrations portfolio`
+
 2. Migrate
+
    `python3 manage.py migrate`
 
 ## _Create Super User_
